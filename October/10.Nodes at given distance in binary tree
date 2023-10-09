@@ -1,0 +1,45 @@
+class Solution
+{
+     static boolean flag= false;
+     public static ArrayList<Integer> KDistanceNodes(Node root, int target , int k) {
+        //write your code here
+        flag = false;
+        ArrayList<Node> path = new ArrayList<>();
+        ArrayList<Integer> ans = new ArrayList<>();
+        
+        rootToTargetNode(root, target, path);
+        Node block = null;
+        
+        Collections.reverse(path);
+        
+        for(int i=0; i<path.size(); i++) {
+            addTargetNodes(path.get(i), block, k-i, ans);
+            block = path.get(i);
+        }
+        Collections.sort(ans);
+        return ans;
+    }
+    
+    
+    public static void rootToTargetNode(Node node, int target, ArrayList<Node> path) {
+        if(node == null || flag) return;
+        
+        if(node.data == target) {
+            flag = true;
+        }
+        
+        path.add(node);
+        rootToTargetNode(node.left, target, path);
+        rootToTargetNode(node.right, target, path);
+        if(!flag) path.remove(path.size()-1);
+    }
+    
+    public static void addTargetNodes(Node node, Node block, int k, ArrayList<Integer> ans) {
+        if(node == block || node == null || k < 0) return;
+        
+        if(k == 0) ans.add(node.data);
+        
+        addTargetNodes(node.left, block, k-1, ans);
+        addTargetNodes(node.right, block, k-1, ans);
+    }
+};
